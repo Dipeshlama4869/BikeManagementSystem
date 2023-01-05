@@ -1,0 +1,112 @@
+﻿@page "/stats"
+
+<div class="border border-2 border-secondary rounded-2 p-4">
+	<div class="col-12 text-center">
+		<h4>Product List</h4>
+	</div>
+	<hr class="solid" />
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>
+					<div class="d-flex">Item Name</div>
+				</th>
+				<th>
+					<div class="d-flex">Quantity</div>
+				</th>
+				<th>
+					<div class="d-flex">Ordered By</div>
+				</th>
+				<th>
+					<div class="d-flex">Approved By</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				IEnumerable<Models.Order> orders = _orders;
+
+				foreach (var order in orders)
+				{
+					<tr>
+						<td>
+							@{
+								var product = ProductService.GetById(order.ProductId);
+								<span>@(product.Title)</span>
+							}
+						</td>
+						<td>
+							@order.Quantity
+						</td>
+						<td>
+							@{
+								var orderBy = UserService.GetById(order.OrderedBy);
+								<span>@(orderBy.Username)</span>
+							}
+						</td>
+						<td>
+							@{
+								var approvedBy = UserService.GetById(order.ApprovedBy);
+								<span>@(approvedBy.Username)</span>
+							}
+						</td>
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
+</div>
+
+<div class="border border-2 border-secondary rounded-2 p-4 mt-3">
+	<div class="col-12 text-center">
+		<h4>Product Status</h4>
+	</div>
+	<hr class="solid" />
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>
+					<div class="d-flex">Item Name</div>
+				</th>
+				<th>
+					<div class="d-flex">Quantity</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				IEnumerable<Models.OrderQuantity> stats = _stats;
+
+				foreach (var stat in stats)
+				{
+					<tr>
+						<td>
+							@{
+								var product = ProductService.GetById(stat.Item);
+								<span>@(product.Title)</span>
+							}
+						</td>
+						<td>
+							@stat.Quantity
+						</td>
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
+</div>
+
+
+
+@code {
+	public List<Models.Order> _orders { get; set; }
+
+	public List<Models.OrderQuantity> _stats { get; set; }
+
+
+	protected override void OnInitialized()
+	{
+		_orders = OrderService.GetAll().Where(x => x.IsApproved).ToList();
+		_stats = StatsService.GetOrderedQuantity();
+	}
+}

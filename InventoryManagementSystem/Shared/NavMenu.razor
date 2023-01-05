@@ -1,0 +1,70 @@
+﻿
+<div class="top-row ps-3 navbar navbar-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="">Bike Management Service</a>
+		<button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+	</div>
+</div>
+
+<div class='@(_collapseNavMenu ? "collapse" : "") navBar' @onclick="ToggleNavMenu">
+	<nav class="flex-column">
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="dashboard" Match="NavLinkMatch.All">
+				<span class="oi oi-dashboard" aria-hidden="true"></span> Dashboard
+			</NavLink>
+		</div>
+		@if (UserRole == Role.Admin)
+		{
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="users" Match="NavLinkMatch.All">
+					<span class="oi oi-people" aria-hidden="true"></span> Users
+				</NavLink>
+			</div>
+		}
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="products">
+				<span class="oi oi-briefcase" aria-hidden="true"></span> Products
+			</NavLink>
+		</div>
+		@if (UserRole == Role.Admin)
+		{
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="orders" Match="NavLinkMatch.All">
+					<span class="oi oi-basket" aria-hidden="true"></span> Orders
+				</NavLink>
+			</div>
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="stats">
+					<span class="oi oi-bookmark" aria-hidden="true"></span> Status
+				</NavLink>
+			</div>
+		}
+		<div class="nav-item px-3 justify-content-end">
+			<NavLink class="nav-link text-danger" role="button" @onclick="LogoutHandler">
+				<span class="oi oi-account-logout" /> Logout
+			</NavLink>
+		</div>
+	</nav>
+</div>
+
+@code {
+	[Parameter]
+	public string Username { get; set; }
+
+	[Parameter]
+	public Role UserRole { get; set; }
+
+	[Parameter]
+	public EventCallback LogoutHandler { get; set; }
+
+	private bool _collapseNavMenu { get; set; } = true;
+
+	private string NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
+
+	private void ToggleNavMenu()
+	{
+		_collapseNavMenu = !_collapseNavMenu;
+	}
+}

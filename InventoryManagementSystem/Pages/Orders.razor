@@ -1,0 +1,115 @@
+﻿@page "/orders"
+
+<div class="row mt-3 mb-3">
+	<div class="col-12 text-center">
+		<h3>Orders List</h3>
+	</div>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                <div class="d-flex">
+                    Status
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    <input type="search" class="form-control search" placeholder="Search"/>
+                    <a class='btn text-@(_sortBy == "product" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("product")'>
+                        <span class='oi oi-sort-@(_sortBy == "product" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Quantity
+                    <a class='btn text-@(_sortBy == "quantity" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("quantity")'>
+                        <span class='oi oi-sort-@(_sortBy == "quantity" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Ordered By
+                    <a class='btn text-@(_sortBy == "createdBy" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("createdBy")'>
+                        <span class='oi oi-sort-@(_sortBy == "createdBy" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            IEnumerable<Models.Order> orders = _orders;
+
+            foreach (var order in orders)
+            {
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input me-0" type="checkbox" checked="@order.IsApproved"
+                               @onchange='()=>ToggleDone(order)' />
+                        </div>
+                    </td>
+                    <td class='@(order.IsApproved ? "text-decoration-line-through" : "")'>
+                        @{
+                            var product = ProductService.GetById(order.ProductId);
+                            <span>@(product.Title)</span>
+                        }
+                    </td>
+                    <td>@order.Quantity</td>
+                    <td>
+                        @{
+                            var user = UserService.GetById(order.OrderedBy);
+                            <span>@(user.Username)</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+
+    [CascadingParameter]
+    private GlobalState _globalState { get; set; }
+
+    public List<Models.Order> _orders { get; set; }
+
+    public string _tabFilter = "All";
+
+    public string _sortBy = "Product";
+
+    public string _sortDirection = "ascending";
+
+    protected override void OnInitialized()
+    {
+        _orders = OrderService.GetAll();
+    }
+
+    private void ToggleDone(Order order)
+    {
+        order.IsApproved = !order.IsApproved;
+        _orders = OrderService.Update(order.Id, _globalState.CurrentUser.Id);
+    }
+
+    private void SortByHandler(string sortByName)
+    {
+        if (_sortBy == sortByName)
+        {
+            _sortDirection = _sortDirection == "ascending" ? "descending" : "ascending";
+        }
+        else
+        {
+            _sortBy = sortByName;
+            _sortDirection = "ascending";
+        }
+    }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "15efcd3f-9067-4a8b-96f6-5dadef7183c6",
+    "ProductId": "e8b64832-58f4-4f34-8d31-51d0ffbf6b38",
+    "OrderedBy": "fe5a21e3-e957-43b8-bef0-dcf99018d710",
+    "IsApproved": true,
+    "Quantity": 10,
+    "ApprovedBy": "e6cc31b5-f30b-44c7-aee9-39e030fb836e"
+  },
+  {
+    "Id": "da48a794-f605-40a7-86f5-0ab6697dfeeb",
+    "ProductId": "e88ea760-4abc-4b22-8ab3-e9c795f2a1ae",
+    "OrderedBy": "fe5a21e3-e957-43b8-bef0-dcf99018d710",
+    "IsApproved": true,
+    "Quantity": 15,
+    "ApprovedBy": "e6cc31b5-f30b-44c7-aee9-39e030fb836e"
+  },
+  {
+    "Id": "628b62e2-309d-4c51-94b1-fdf3d0c010d8",
+    "ProductId": "7e6d0b38-dde9-4b60-b3e7-c94a97b0acec",
+    "OrderedBy": "fe5a21e3-e957-43b8-bef0-dcf99018d710",
+    "IsApproved": false,
+    "Quantity": 5,
+    "ApprovedBy": "00000000-0000-0000-0000-000000000000"
+  }
+]

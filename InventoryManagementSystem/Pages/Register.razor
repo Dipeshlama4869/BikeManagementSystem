@@ -1,0 +1,85 @@
+﻿@page "/register"
+
+@inject NavigationManager NavManager
+
+<div class="vh-100 container-fluid h-custom">
+	<div class="row d-flex justify-content-center align-items-center h-100">
+		<div class="col-md-9 col-lg-6 col-xl-5">
+			<img src="login.png"
+				 class="img-fluid" alt="Sample image">
+		</div>
+		<div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+			<form @onsubmit="RegisterHandler">
+				<!-- Username input -->
+				<label class="font-weight-bold" for="form3Example4">Username</label>
+				<div class="form-outline mb-4">
+					<input type="text" id="form3Example3" @bind="_username" class="form-control form-control-lg" />
+				</div>
+
+				<!-- Email input -->
+				<label class="font-weight-bold" for="form3Example4">Email</label>
+				<div class="form-outline mb-4">
+					<input type="text" id="form3Example3" @bind="_email" class="form-control form-control-lg" />
+				</div>
+
+				<!-- Password input -->
+				<label class="font-weight-bold" for="form3Example4">Password</label>
+				<div class="form-outline mb-3">
+					<input type="password" id="form3Example3" class="form-control form-control-lg" @bind="_password">
+				</div>
+				@if (!string.IsNullOrEmpty(_errorMessage))
+				{
+					<AlertMessage Type="danger" Message="@_errorMessage" />
+				}
+
+				<div class="text-center text-lg-start mt-4 pt-2">
+					<button type="submit" class=" btn btn-primary btn-lg"
+							style="padding-left: 2.5rem; padding-right: 2.5rem;">
+						<span class="oi oi-data-transfer-upload" /> &nbsp; Register
+					</button>
+					<p class="small fw-bold mt-2 pt-1 mb-0">
+						Already have an account? <a href="/login"
+												  class="link-danger">Login</a>
+					</p>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>
+
+@code {
+
+	[CascadingParameter]
+	private GlobalState _globalState { get; set; }
+
+	private bool _showDefaultCredentials { get; set; }
+
+	private string _username { get; set; }
+
+	private string _email { get; set; }
+
+	private string _password { get; set; }
+
+	private string _errorMessage = "";
+
+	private void RegisterHandler()
+	{
+		try
+		{
+			_errorMessage = "";
+
+			var user = UserService.Create(Guid.Empty, _username, _email, _password, Role.Staff);
+
+			if (user != null)
+			{
+				NavManager.NavigateTo("/login");
+			}
+		}
+		catch (Exception e)
+		{
+			_errorMessage = e.Message;
+			Console.WriteLine(e);
+		}
+	}
+}
